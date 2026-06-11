@@ -1,21 +1,4 @@
-﻿---
-title: Lumen AI Native Mini CRM
-emoji: rocket
-colorFrom: indigo
-colorTo: purple
-sdk: docker
-app_port: 7860
-pinned: true
-license: mit
-short_description: AI-native CRM with Gemini co-pilot and live delivery feed
-tags:
-  - crm
-  - gemini
-  - fastapi
-  - react
-  - nlp
----
-<div align="center">
+﻿<div align="center">
 
 # 🚀 Lumen — AI-Native Mini CRM
 
