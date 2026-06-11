@@ -10,26 +10,8 @@ if (-not $Token) {
     $Token = Read-Host "Enter your Hugging Face token"
 }
 
-$HF_YAML = @"
----
-title: Lumen AI Native Mini CRM
-emoji: rocket
-colorFrom: indigo
-colorTo: purple
-sdk: docker
-app_port: 7860
-pinned: true
-license: mit
-short_description: AI-native CRM with Gemini co-pilot and live delivery feed
-tags:
-  - crm
-  - gemini
-  - fastapi
-  - react
-  - nlp
----
-
-"@
+$emoji = [System.Char]::ConvertFromUtf32(0x1F680)  # 🚀 rocket
+$HF_YAML = "---`ntitle: Lumen AI Native Mini CRM`nemoji: $emoji`ncolorFrom: indigo`ncolorTo: purple`nsdk: docker`napp_port: 7860`npinned: true`nlicense: mit`nshort_description: AI-native CRM with Gemini co-pilot and live delivery feed`ntags:`n  - crm`n  - gemini`n  - fastapi`n  - react`n  - nlp`n---`n`n"
 
 Write-Host "Preparing Hugging Face push..." -ForegroundColor Cyan
 
