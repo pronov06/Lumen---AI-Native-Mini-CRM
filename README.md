@@ -5,7 +5,7 @@
 [![🤗 Live Demo](https://img.shields.io/badge/🤗%20Live%20Demo-Hugging%20Face%20Spaces-yellow?style=for-the-badge)](https://huggingface.co/spaces/pronov06/lumen-crm)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/pronov06/Lumen---AI-Native-Mini-CRM)
 
-> 🌐 **Try it live → [huggingface.co/spaces/pronov06/lumen-crm](https://huggingface.co/spaces/pronov06/lumen-crm)**
+🌐 **Try it live → [huggingface.co/spaces/pronov06/lumen-crm](https://huggingface.co/spaces/pronov06/lumen-crm)**
 
 </div>
 
