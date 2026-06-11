@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Databases / local state
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# Node / web build
+node_modules/
+dist/
+.vite/
+
+# Env
+.env
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Large binaries
+zeno.pdf
+

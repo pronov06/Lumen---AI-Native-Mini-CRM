@@ -1,0 +1,257 @@
+:root {
+  /* Surfaces — warm paper, kept cleaner than the usual cream so it reads as a
+     control surface, not a magazine. */
+  --paper: #faf9f5;
+  --panel: #ffffff;
+  --panel-2: #f5f3ec;
+  --ink: #17150f;
+  --muted: #6e6a5e;
+  --faint: #9a9588;
+  --line: #e7e4d9;
+  --line-strong: #d8d4c6;
+
+  /* One brand color: roasted ember. Used for the mark, active state, the live
+     pulse — and nowhere it isn't earned. */
+  --accent: #b5470b;
+  --accent-ink: #8f3d06;
+  --accent-soft: #f6e7d8;
+
+  /* Lifecycle ramp: grey while in transit, warming into ember as engagement
+     deepens. Red is reserved for one thing only — failure. */
+  --s-queued: #b7b2a4;
+  --s-sent: #8a8474;
+  --s-delivered: #cb8f43;
+  --s-opened: #be6f1e;
+  --s-read: #a85610;
+  --s-clicked: #8f3d06;
+  --s-failed: #b3402e;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --r: 4px;
+  --shadow: 0 1px 0 rgba(23, 21, 15, 0.04), 0 1px 2px rgba(23, 21, 15, 0.05);
+}
+
+[data-theme='dark'] {
+  --paper: #0f0e0b;
+  --panel: #161512;
+  --panel-2: #1e1d19;
+  --ink: #eae8e2;
+  --muted: #a19d92;
+  --faint: #747167;
+  --line: #2e2c26;
+  --line-strong: #3e3c35;
+
+  --accent: #f26f21;
+  --accent-ink: #fbd6c0;
+  --accent-soft: #2e1d0f;
+
+  --shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+body, nav, main, header, aside, .panel, .btn, .field, textarea, hr {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a {
+  color: inherit;
+}
+button {
+  font-family: inherit;
+}
+
+/* Numerals, ids, timestamps, anything an operator scans. */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 500;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+
+.hairline {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 0;
+}
+
+/* ---- buttons ---------------------------------------------------------------- */
+.btn {
+  appearance: none;
+  border: 1px solid var(--line-strong);
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: var(--r);
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.04s ease;
+}
+.btn:hover {
+  background: var(--panel-2);
+}
+.btn:active {
+  transform: translateY(0.5px);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-ink);
+}
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.btn-ghost:hover {
+  background: var(--panel-2);
+}
+
+/* ---- state pills ------------------------------------------------------------ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px 2px 6px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.pill .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: currentColor;
+}
+.st-queued { color: var(--s-queued); }
+.st-sent { color: var(--s-sent); }
+.st-delivered { color: var(--s-delivered); }
+.st-opened { color: var(--s-opened); }
+.st-read { color: var(--s-read); }
+.st-clicked { color: var(--s-clicked); }
+.st-failed { color: var(--s-failed); }
+
+/* ---- inputs ----------------------------------------------------------------- */
+.field {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  padding: 9px 11px;
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.field:focus,
+.btn:focus-visible,
+.field:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+textarea.field {
+  resize: vertical;
+  min-height: 64px;
+}
+
+/* ---- live pulse ------------------------------------------------------------- */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.live .beacon {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(181, 71, 11, 0.5);
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(181, 71, 11, 0.45); }
+  70% { box-shadow: 0 0 0 7px rgba(181, 71, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(181, 71, 11, 0); }
+}
+
+/* Row-flash when a communication advances in the live feed. */
+@keyframes flashrow {
+  from { background: var(--accent-soft); }
+  to { background: transparent; }
+}
+.flash {
+  animation: flashrow 1.1s ease-out;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+  border: 3px solid var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

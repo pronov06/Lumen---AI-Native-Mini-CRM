@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: xeno
+      POSTGRES_PASSWORD: xeno
+      POSTGRES_DB: xeno
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xeno"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    # Not published to the host by default; the services reach it over the
+    # compose network. Uncomment to inspect with a local client.
+    # ports: ["5432:5432"]
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  channel:
+    build: ./services/channel
+    environment:
+      CHANNEL_CALLBACK_SECRET: ${CALLBACK_SECRET:-dev-shared-secret}
+      CHANNEL_FAILURE_RATE: ${CHANNEL_FAILURE_RATE:-0.06}
+      CHANNEL_OUT_OF_ORDER_RATE: ${CHANNEL_OUT_OF_ORDER_RATE:-0.15}
+      CHANNEL_DUPLICATE_RATE: ${CHANNEL_DUPLICATE_RATE:-0.08}
+      CHANNEL_MIN_LATENCY_MS: ${CHANNEL_MIN_LATENCY_MS:-150}
+      CHANNEL_MAX_LATENCY_MS: ${CHANNEL_MAX_LATENCY_MS:-1200}
+    ports:
+      - "8001:8001"
+
+  crm:
+    build: ./services/crm
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      CRM_DATABASE_URL: postgresql+asyncpg://xeno:xeno@db:5432/xeno
+      CRM_BUS: redis
+      CRM_REDIS_URL: redis://redis:6379/0
+      CRM_CHANNEL_BASE_URL: http://channel:8001
+      # How the channel reaches us back. Inside the compose network that is the
+      # service name; the channel posts signed callbacks to ${this}/receipts.
+      CRM_CRM_PUBLIC_URL: http://crm:8000
+      CRM_CALLBACK_SECRET: ${CALLBACK_SECRET:-dev-shared-secret}
+      CRM_CORS_ORIGINS: ${CRM_CORS_ORIGINS:-http://localhost:5173,http://localhost:8080}
+      CRM_OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      CRM_OPENROUTER_MODEL: ${OPENROUTER_MODEL:-deepseek/deepseek-chat}
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: ./web
+      args:
+        # Baked into the static bundle at build time (Vite inlines VITE_*).
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:8000}
+        VITE_WS_BASE: ${VITE_WS_BASE:-ws://localhost:8000}
+    depends_on:
+      - crm
+    ports:
+      - "8080:80"

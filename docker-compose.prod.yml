@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-xeno}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-xeno-secure-password}
+      POSTGRES_DB: ${DB_NAME:-xeno}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-xeno} -d ${DB_NAME:-xeno}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  channel:
+    build:
+      context: ./services/channel
+    restart: always
+    environment:
+      CHANNEL_CALLBACK_SECRET: ${CALLBACK_SECRET:-dev-shared-secret}
+      CHANNEL_FAILURE_RATE: ${CHANNEL_FAILURE_RATE:-0.06}
+      CHANNEL_OUT_OF_ORDER_RATE: ${CHANNEL_OUT_OF_ORDER_RATE:-0.15}
+      CHANNEL_DUPLICATE_RATE: ${CHANNEL_DUPLICATE_RATE:-0.08}
+      CHANNEL_MIN_LATENCY_MS: ${CHANNEL_MIN_LATENCY_MS:-150}
+      CHANNEL_MAX_LATENCY_MS: ${CHANNEL_MAX_LATENCY_MS:-1200}
+    ports:
+      - "8001:8001"
+
+  crm:
+    build:
+      context: ./services/crm
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      CRM_DATABASE_URL: postgresql+asyncpg://${DB_USER:-xeno}:${DB_PASSWORD:-xeno-secure-password}@db:5432/${DB_NAME:-xeno}
+      CRM_BUS: redis
+      CRM_REDIS_URL: redis://redis:6379/0
+      CRM_CHANNEL_BASE_URL: http://channel:8001
+      CRM_CRM_PUBLIC_URL: http://crm:8000
+      CRM_CALLBACK_SECRET: ${CALLBACK_SECRET:-dev-shared-secret}
+      CRM_CORS_ORIGINS: ${CRM_CORS_ORIGINS:-*}
+      CRM_GEMINI_API_KEY: ${GEMINI_API_KEY}
+      CRM_GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_BASE: ${VITE_API_BASE}
+        VITE_WS_BASE: ${VITE_WS_BASE}
+    restart: always
+    depends_on:
+      - crm
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:
+  redisdata:
